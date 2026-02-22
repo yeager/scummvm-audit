@@ -1,5 +1,7 @@
 # ScummVM Security & Quality Audit
 
+> ⚠️ **Work in progress** — Inget av detta är testat. Patcharna är framtagna genom statisk analys och kodgranskning men har inte kompilerats eller körts mot ScummVM. Använd på egen risk.
+
 Patches addressing security vulnerabilities, memory safety issues, and code quality improvements found in ScummVM.
 
 ## Findings Summary
