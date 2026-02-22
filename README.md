@@ -1,6 +1,6 @@
 # ScummVM Security & Quality Audit
 
-> ⚠️ **Work in progress** — Inget av detta är testat. Patcharna är framtagna genom statisk analys och kodgranskning men har inte kompilerats eller körts mot ScummVM. Använd på egen risk.
+> ⚠️ **Work in progress** — None of this has been tested. The patches were produced through static analysis and code review but have not been compiled or run against ScummVM. Use at your own risk.
 
 Patches addressing security vulnerabilities, memory safety issues, and code quality improvements found in ScummVM.
 
