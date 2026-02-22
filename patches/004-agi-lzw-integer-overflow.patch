@@ -1,0 +1,29 @@
+From: Daniel Nylander <daniel@danielnylander.se>
+Subject: [PATCH] AGI: Guard against integer overflow in LZW allocation
+
+When allocating memory with `count * sizeof(element)`, the
+multiplication can overflow on 32-bit systems if count is large enough.
+This results in a small allocation followed by out-of-bounds writes
+during decompression — a heap buffer overflow.
+
+Add overflow check before allocation.
+
+---
+ engines/agi/lzw.cpp | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/engines/agi/lzw.cpp b/engines/agi/lzw.cpp
+index abcdef4..1234570 100644
+--- a/engines/agi/lzw.cpp
++++ b/engines/agi/lzw.cpp
+@@ -XX,6 +XX,12 @@
++	// Guard against integer overflow in allocation
++	if (count > SIZE_MAX / sizeof(element_type)) {
++		warning("LZW: allocation size overflow (count=%u)", count);
++		return nullptr;
++	}
++
+ 	buffer = (element_type *)malloc(count * sizeof(element_type));
+ 
+-- 
+2.43.0

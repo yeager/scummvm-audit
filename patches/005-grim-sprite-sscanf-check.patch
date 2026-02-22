@@ -1,0 +1,16 @@
+From: Daniel Nylander <daniel@danielnylander.se>
+Subject: [PATCH] GRIM: Add sscanf return check in sprite loading
+
+Multiple sscanf calls in the Grim engine parse sprite file headers
+without validating the return value. Corrupted sprite files cause
+uninitialized variables to be used for dimensions and offsets,
+potentially causing out-of-bounds memory access during rendering.
+
+---
+ engines/grim/sprite.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+Note: Similar pattern exists in engines/twp/font.cpp where sscanf
+parses font metrics without return value checks.
+-- 
+2.43.0

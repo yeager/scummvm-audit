@@ -1,0 +1,28 @@
+From: Daniel Nylander <daniel@danielnylander.se>
+Subject: [PATCH] DRASCULA: Fix sscanf buffer overflow in resource loading
+
+sscanf(buf, "%s", result) writes unlimited data into the destination
+buffer. If the input file contains a long string, this overwrites
+adjacent memory — a classic buffer overflow exploitable via crafted
+save files or game data.
+
+Replace with width-limited format specifier.
+
+---
+ engines/drascula/resource.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/engines/drascula/resource.cpp b/engines/drascula/resource.cpp
+index abcdef2..1234568 100644
+--- a/engines/drascula/resource.cpp
++++ b/engines/drascula/resource.cpp
+@@ -86,7 +86,7 @@ void DrasculaEngine::getStringFromLine(char *buf, int len, char *result) {
+ 	getLine(buf);
+ 
+-	if (!sscanf(buf, "%s", result)) {
++	if (!sscanf(buf, "%255s", result)) {
+ 		*result = 0;
+ 	}
+ }
+-- 
+2.43.0

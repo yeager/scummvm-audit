@@ -1,0 +1,34 @@
+From: Daniel Nylander <daniel@danielnylander.se>
+Subject: [PATCH] TWP: Check sscanf return value in Lip::load
+
+sscanf() returns the number of successfully matched items. Without
+checking the return value, malformed .lip files cause item.time and
+item.letter to contain uninitialized values (undefined behavior).
+
+This can manifest as garbage animation timing or reading uninitialized
+stack memory.
+
+---
+ engines/twp/lip.cpp | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/engines/twp/lip.cpp b/engines/twp/lip.cpp
+index abcdef1..1234567 100644
+--- a/engines/twp/lip.cpp
++++ b/engines/twp/lip.cpp
+@@ -29,8 +29,11 @@ void Lip::load(Common::SeekableReadStream *stream) {
+ 	while (!stream->eos()) {
+ 		LipItem item;
+ 		Common::String line = stream->readLine();
+-		sscanf(line.c_str(), "%f\t%c", &item.time, &item.letter);
+-		_items.push_back(item);
++		if (sscanf(line.c_str(), "%f\t%c", &item.time, &item.letter) == 2) {
++			_items.push_back(item);
++		} else {
++			warning("Lip::load: malformed line '%s'", line.c_str());
++		}
+ 	}
+ }
+ 
+-- 
+2.43.0

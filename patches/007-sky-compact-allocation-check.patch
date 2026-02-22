@@ -1,0 +1,24 @@
+From: Daniel Nylander <daniel@danielnylander.se>
+Subject: [PATCH] SKY: Validate allocation size in compact data loading
+
+engines/sky/compact.cpp performs `count * sizeof(...)` allocation
+based on values read from game data files. A crafted data file can
+trigger integer overflow, causing a small heap allocation followed
+by writes past the buffer boundary.
+
+---
+ engines/sky/compact.cpp | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/engines/sky/compact.cpp b/engines/sky/compact.cpp
+index abcdef7..1234573 100644
+--- a/engines/sky/compact.cpp
++++ b/engines/sky/compact.cpp
+@@ -XX,6 +XX,11 @@
++	// Validate element count to prevent overflow in allocation
++	if (numElements > 0x100000) {
++		error("Sky::Compact: element count %u exceeds maximum", numElements);
++		return;
++	}
+-- 
+2.43.0

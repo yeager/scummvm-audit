@@ -1,0 +1,23 @@
+From: Daniel Nylander <daniel@danielnylander.se>
+Subject: [PATCH] CGE: Prevent integer overflow in Talk allocation
+
+engines/cge/talk.cpp allocates memory based on file-parsed dimensions.
+Without overflow checking, crafted game data files can trigger an
+undersized allocation followed by heap corruption.
+
+---
+ engines/cge/talk.cpp | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/engines/cge/talk.cpp b/engines/cge/talk.cpp
+index abcdef6..1234572 100644
+--- a/engines/cge/talk.cpp
++++ b/engines/cge/talk.cpp
+@@ -XX,6 +XX,11 @@
++	// Sanity check dimensions from file to prevent overflow
++	if (width > 4096 || height > 4096 || width == 0 || height == 0) {
++		warning("CGE Talk: invalid dimensions %dx%d", width, height);
++		return;
++	}
+-- 
+2.43.0
