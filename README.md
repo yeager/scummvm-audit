@@ -36,6 +36,16 @@ Patches addressing security vulnerabilities, memory safety issues, and code qual
 ### 007-cge-talk-allocation-overflow.patch
 **Problem:** `engines/cge/talk.cpp` has a similar integer overflow risk in allocation — multiplying user-controlled sizes without overflow checking.
 
+## Roadmap
+
+- [ ] More `sprintf` → `snprintf` conversions (~354 files identified)
+- [ ] `strcpy` → `Common::strlcpy` hardening across engine parsers
+- [ ] `atoi` → `strtol` with validation in remaining engines
+- [ ] Null-check audit for `delete`/`free` paths (~1150 files)
+- [ ] `strncpy` null-termination guarantees
+- [ ] Fuzz testing harness for file format parsers (`.lip`, `.drascula`, `.lzw`)
+- [ ] Upstream PR submission to ScummVM
+
 ## Methodology
 
 - GitHub code search API for known unsafe patterns
